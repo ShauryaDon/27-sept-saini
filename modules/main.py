@@ -55,7 +55,12 @@ def home():
     return "Bot is Running"
 
 def run_web():
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
+  app.run(
+    host="0.0.0.0",
+    port=int(os.environ.get("PORT", 8000)),
+    threaded=True,
+    use_reloader=False
+)
 
 threading.Thread(target=run_web, daemon=True).start()
 
@@ -198,12 +203,18 @@ register_drm_handlers(bot)
 #==================================================================
 
 def notify_owner():
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    data = {
-        "chat_id": OWNER,
-        "text": "𝐁𝐨𝐭 𝐑𝐞𝐬𝐭𝐚𝐫𝐭𝐞𝐝 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲 ✅"
-    }
-    requests.post(url, data=data)
+    try:
+        url=f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+        requests.post(
+            url,
+            data={
+                "chat_id": OWNER,
+                "text":"Bot Restarted Successfully"
+            },
+            timeout=10
+        )
+    except Exception:
+        pass
 
 def reset_and_set_commands():
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/setMyCommands"
@@ -248,5 +259,4 @@ def reset_and_set_commands():
 if __name__ == "__main__":
     reset_and_set_commands()
     notify_owner() 
-
-bot.run()
+    bot.run()
