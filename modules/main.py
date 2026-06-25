@@ -44,6 +44,20 @@ keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("💳 Plans", callback_data="upgrade_command")],
             [InlineKeyboardButton(text="📞 Contact", url=f"tg://openmessage?user_id={OWNER}"), InlineKeyboardButton(text="🛠️ Repo", url="https://github.com/nikhilsainiop/saini-txt-direct")],
         ])      
+from flask import Flask
+import threading
+import os
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Bot is Running"
+
+def run_web():
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
+
+threading.Thread(target=run_web, daemon=True).start()
 
 @bot.on_message(filters.command("start"))
 async def start(bot, m: Message):
