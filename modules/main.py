@@ -44,25 +44,6 @@ keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("💳 Plans", callback_data="upgrade_command")],
             [InlineKeyboardButton(text="📞 Contact", url=f"tg://openmessage?user_id={OWNER}"), InlineKeyboardButton(text="🛠️ Repo", url="https://github.com/nikhilsainiop/saini-txt-direct")],
         ])      
-from flask import Flask
-import threading
-import os
-
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return "Bot is Running"
-
-def run_web():
-  app.run(
-    host="0.0.0.0",
-    port=int(os.environ.get("PORT", 8000)),
-    threaded=True,
-    use_reloader=False
-)
-
-threading.Thread(target=run_web, daemon=True).start()
 
 @bot.on_message(filters.command("start"))
 async def start(bot, m: Message):
@@ -203,18 +184,12 @@ register_drm_handlers(bot)
 #==================================================================
 
 def notify_owner():
-    try:
-        url=f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-        requests.post(
-            url,
-            data={
-                "chat_id": OWNER,
-                "text":"Bot Restarted Successfully"
-            },
-            timeout=10
-        )
-    except Exception:
-        pass
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    data = {
+        "chat_id": OWNER,
+        "text": "𝐁𝐨𝐭 𝐑𝐞𝐬𝐭𝐚𝐫𝐭𝐞𝐝 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲 ✅"
+    }
+    requests.post(url, data=data)
 
 def reset_and_set_commands():
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/setMyCommands"
@@ -259,4 +234,5 @@ def reset_and_set_commands():
 if __name__ == "__main__":
     reset_and_set_commands()
     notify_owner() 
-    bot.run()
+
+bot.run()
